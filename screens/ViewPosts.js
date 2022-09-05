@@ -1,32 +1,37 @@
-import React, {Component} from "react";
+import React from "react";
 import { StyleSheet, Button, Text, View, SafeAreaView, FlatList  } from "react-native";
 import { AsyncStorage } from 'react-native';
 
+var MyContext = React.createContext();
+
 const ViewPosts = ({ navigation, route }) => {
     const [xarr,setArrayItems] = React.useState([]);
-    let tempArr = [];
-    tempArr.push(["",""]);
-	const getAllArticles = async () =>{
+
+    var [myData, setMyData] = React.useState(null);
+
+    React.useEffect(() => {
+        let tempArr = []; 
         AsyncStorage.getAllKeys((err, keys) => {
-            AsyncStorage.multiGet(keys, (err, stores) => {
-              stores.map((result, i, store) => {
-                let item = [];
-                item [0] = store[i][0];
-                item [1] = store[i][1];
-                tempArr.push (item);
-              });
+          AsyncStorage.multiGet(keys, (err, stores) => {
+            stores.map((result, i, store) => {
+              let item = [];
+              item [0] = store[i][0];
+              item [1] = store[i][1];
+              tempArr.push (item);
             });
-        });
-    } 
-    getAllArticles();   
+            setMyData (tempArr)
+          });
+      });
+    }, []);
+    
+
   return (
-    // getAllArticles (),
-    tempArr => setArrayItems (tempArr),
 	<SafeAreaView style={styles.container}>
+        <MyContext.Provider value={myData}>
 		<View>
     		<Text style={styles.fieldcaption}>All posts</Text>
 			<FlatList
-                data={tempArr} 
+                data={myData} 
                 renderItem={({ item }) => (
                 <View>
                     <View style={styles.onepost}>
@@ -47,10 +52,22 @@ const ViewPosts = ({ navigation, route }) => {
                  )}
             />
 		</View>
+        </MyContext.Provider>
 	</SafeAreaView>
 	);
   };
   
+function Main() {
+  const myData = React.useContext(MyContext);
+  if (!myData) {
+    return (<View><Text>Loading...</Text></View>);
+  }
+  return (
+     <View><Text>{myData}</Text></View>
+  );
+}
+
+
 const styles = StyleSheet.create({
 	container: { flex: 1, justifyContent: 'center', marginHorizontal: 16, },
 	title: { fontSize: 30, marginTop: 10, },

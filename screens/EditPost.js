@@ -2,18 +2,19 @@ import React from "react";
 import { StyleSheet, Text, View, SafeAreaView, Button, TextInput, TouchableOpacity  } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { AsyncStorage } from 'react-native';
+import MyContext from "../shared/mycontext";
 
 const EditPost = ({ navigation, route }) => {
     let {category, story} = route.params;
 	let [text, onChangeText] = React.useState(story);
 	let [value, setValue] = React.useState(category);
     const [isFocus, setIsFocus] = React.useState(false);
-  
+
 	const saveArticle = async (key, value) =>{
 		try {
 		  await AsyncStorage.setItem(key, value);
 		  alert ("Edited succesfully");
-		  navigation.navigate('ViewPosts', { name: 'V2' })
+		  navigation.navigate('Home', { name: 'V2' })
 		} catch (e) {
 		  console.log(e);
 		}
