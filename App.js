@@ -23,8 +23,8 @@ render() {
 		<View><Text>Age : {this.props.age} </Text></View>
     <View><Text></Text></View>
 	</View>
-	)
-}
+	) 
+} 
 }
 
 Person.defaultProps = {
