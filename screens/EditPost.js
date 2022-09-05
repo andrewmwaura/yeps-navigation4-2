@@ -1,52 +1,25 @@
-import React from "react";
-import { StyleSheet, Text, View, SafeAreaView, Button, TextInput, TouchableOpacity  } from "react-native";
-import { Dropdown } from "react-native-element-dropdown";
-import { AsyncStorage } from 'react-native';
-import MyContext from "../shared/mycontext";
+class NameForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {value: ''};
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
 
-const EditPost = ({ navigation, route }) => {
-    let {category, story} = route.params;
-	let [text, onChangeText] = React.useState(story);
-	let [value, setValue] = React.useState(category);
-    const [isFocus, setIsFocus] = React.useState(false);
+  handleChange(event) {    this.setState({value: event.target.value});  }
+  handleSubmit(event) {
+    alert('A name was submitted: ' + this.state.value);
+    event.preventDefault();
+  }
 
-	const saveArticle = async (key, value) =>{
-		try {
-		  await AsyncStorage.setItem(key, value);
-		  alert ("Edited succesfully");
-		  navigation.navigate('Home', { name: 'V2' })
-		} catch (e) {
-		  console.log(e);
-		}
-	  };
-	const submitPost = () => (saveArticle (value, text) );
-	let data2 = [{value: "Weather",},{value: "Agriculture",},{value: "School",}];
-
-	return (   
-	<SafeAreaView style={styles.container}>
-		<View><Text style={styles.title}>Edit details and submit</Text></View>
-		<Text style={styles.fieldcaption}>Category: </Text>
-		<Dropdown
-			label="my dropdown" labelField="value" valueField="value" placeholder="Category" value={value}
-			data={data2} onFocus={() => setIsFocus(true)} onBlur={() => setIsFocus(false)}
-			onChange={item => { setValue(item.value); setIsFocus(false); }}
-		/>
-		<Text style={styles.fieldcaption}>Story: </Text>
-		<TextInput style={styles.input} 
-                onChangeText = {onChangeText}
-                value={text}  placeholder="Your story" keyboardType="text" />
-		<TouchableOpacity
-			style={styles.button} title="" onPress={submitPost}
-      	><Text>Submit Post</Text></TouchableOpacity>
-	</SafeAreaView>
-	);
-  };
-  
-const styles = StyleSheet.create({
-	container: { flex: 1, justifyContent: 'center', marginHorizontal: 16, },
-	input: { height: 40, margin: 12, borderWidth: 1, padding: 10, },
-	title: { fontSize: 30, marginBottom: 20, },
-	button: {  alignItems: "center", backgroundColor: "#DDDDDD", padding: 10 },	
-	fieldcaption: { marginTop: 20, fontSize: 20, fontWeight: "bold" }
-})
-export default EditPost;
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <label>
+          Name:
+          <input type="text" value={this.state.value} onChange={this.handleChange} />        </label>
+        <input type="submit" value="Submit" />
+      </form>
+    );
+  }
+}
