@@ -8,7 +8,7 @@ const EditPost = ({ navigation, route }) => {
 	let [text, onChangeText] = React.useState(story);
 	let [value, setValue] = React.useState(category);
     const [isFocus, setIsFocus] = React.useState(false);
-
+  
 	const saveArticle = async (key, value) =>{
 		try {
 		  await AsyncStorage.setItem(key, value);
